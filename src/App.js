@@ -1,10 +1,14 @@
-import { Forum } from './components/Forum';
+import { FixedNavbar } from './components/FixedNavbar';
+import { ForumsList } from './components/ForumsList';
 
 function App() {
   return (
-    <div className="App container">
-      <Forum />
-    </div>
+    <>
+      <FixedNavbar />
+      <div className='mt-5'>
+        <ForumsList />
+      </div>
+    </>
   );
 }
 
