@@ -1,9 +1,29 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom';
 
 export const LoginForm = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    const handleUserLogin = async () => {
+        try {
+            const response = await axios.post('http://localhost:8089/authenticate', {username, password});
+            const data = response.data;
+            if(data.code === 200){
+                alert(data.message);
+                navigate('/');
+            }
+            else{
+                alert(data.message);
+            }
+    
+        }
+        catch(err){}
+    }
+
     return (
         <>
             <Row className='mt-5'>
@@ -32,7 +52,10 @@ export const LoginForm = () => {
                                 />
                             </Form.Group>
                             <Form.Group controlId="formBasicPassword" className='mt-3'>
-                                <Button variant="primary" >
+                                <Button 
+                                    variant="primary" 
+                                    onClick={handleUserLogin}
+                                >
                                     Login
                                 </Button>
                             </Form.Group>
