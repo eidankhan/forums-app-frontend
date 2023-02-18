@@ -1,10 +1,33 @@
 import React, { useState } from 'react'
 import { Button, Card, Col, Form, Row } from 'react-bootstrap'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const RegistrationForm = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+
+    const handleUserRegistration = async () => {
+        try {
+            const response = await axios.post('http://localhost:8089/register', { name, username, password })
+            console.log('Response from server --> ',response.data);
+            const data = response.data;
+            if(data.code === 200){
+                setName('');
+                setUsername('');
+                setPassword('');
+                alert('Successfully registered a new user');
+                navigate('/login');
+            }
+        }
+        catch (err) {
+            console.error('Error ',err);
+        }
+
+    }
+
     return (
         <>
             <Row className='mt-5'>
@@ -42,7 +65,10 @@ export const RegistrationForm = () => {
                                 />
                             </Form.Group>
                             <Form.Group controlId="formBasicPassword" className='mt-3'>
-                                <Button variant="primary" >
+                                <Button
+                                    variant="primary"
+                                    onClick={handleUserRegistration}
+                                >
                                     Register
                                 </Button>
                             </Form.Group>
