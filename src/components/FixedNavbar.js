@@ -36,6 +36,9 @@ export const FixedNavbar = () => {
         {isUserLoggedIn &&
           <Navbar.Collapse className="justify-content-end">
             <Nav>
+              <LinkContainer to="/add-forum">
+                <Nav.Link>Add Forum</Nav.Link>
+              </LinkContainer>
               <LinkContainer to="/">
                 <Nav.Link>Profile</Nav.Link>
               </LinkContainer>

@@ -3,6 +3,7 @@ import { ForumsList } from './components/ForumsList';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LoginForm } from './components/LoginForm';
 import { RegistrationForm } from './components/RegistrationForm';
+import { AddForum } from './components/AddForum';
 
 function App() {
   
@@ -14,6 +15,7 @@ function App() {
           <Route exact path='/' element={< ForumsList />}></Route>
           <Route exact path='/login' element={< LoginForm />}></Route>
           <Route exact path='/register' element={< RegistrationForm />}></Route>
+          <Route exact path='/add-forum' element={< AddForum />}></Route>
         </Routes>
       </div>
     </Router>
