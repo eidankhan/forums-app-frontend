@@ -10,11 +10,14 @@ export const LoginForm = () => {
 
     const handleUserLogin = async () => {
         try {
+            debugger;
             const response = await axios.post('http://localhost:8089/authenticate', {username, password});
             const data = response.data;
+            //console.log('token: ' + data.data.token);
             if(data.code === 200){
+                sessionStorage.setItem('token', data.data.token);
                 alert(data.message);
-                navigate('/');
+                navigate('/', {forceRefresh: true});
             }
             else{
                 alert(data.message);

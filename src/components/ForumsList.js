@@ -18,11 +18,15 @@ export const ForumsList = () => {
     }, [showModal]);
   
     useEffect(() => {
-      const timer = setTimeout(() => {
-        setShowModal(true);
-      }, 5000);
+      const token = sessionStorage.getItem('token');
+      console.log('Token: ' + token);
+      if(token === null){
+        const timer = setTimeout(() => {
+          setShowModal(true);
+        }, 5000);
+        return () => clearTimeout(timer);
+      }
   
-      return () => clearTimeout(timer);
     }, []);
   
     useEffect(() => {
