@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
+import { Button, Col, Modal, Row, Spinner } from 'react-bootstrap'
 import { Forum } from './Forum'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -9,6 +9,8 @@ export const ForumsList = () => {
   const [showModal, setShowModal] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [forums, setForums] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     loadForums();
@@ -22,15 +24,13 @@ export const ForumsList = () => {
   }, [showModal]);
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
-    console.log('Token: ' + token);
-    if (token === null) {
+    const userLoginStatus = localStorage.getItem('isUserLoggedIn');
+    if (userLoginStatus === null) {
       const timer = setTimeout(() => {
         setShowModal(true);
       }, 5000);
       return () => clearTimeout(timer);
     }
-
   }, []);
 
   useEffect(() => {
@@ -42,12 +42,14 @@ export const ForumsList = () => {
 
   const loadForums = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get('http://localhost:8089/forums');
-      //const data = response.data;
       setForums(response.data.data);
-      //console.log('Data --> ', forums);
     } catch (error) {
       console.error('error --> ', error);
+    }
+    finally {
+      setIsLoading(false);
     }
 
   }
@@ -83,19 +85,38 @@ export const ForumsList = () => {
         <Col></Col>
         <Col md={8}>
           {
-            forums !== undefined &&
-            <div>
-              {forums.map(forum => (
-                <div key={forum.id}>
-                  <Forum 
-                    title={forum.title}
-                    content={forum.content}
-                    user={forum.user}
-                   />
+            isLoading ?
+              (
+                <div className="text-center mt-5">
+                  <Spinner animation="border" role="status" size='xl'>
+                    <span className="sr-only"></span>
+                  </Spinner>
                 </div>
-              ))}
-            </div>
+              )
+              :
+              (
+
+                forums === undefined ? <p> No Posts Available </p> :
+                <div>
+                  {forums.map(forum => (
+                    <div key={forum.id}>
+                      <Forum
+                        id={forum.id}
+                        title={forum.title}
+                        content={forum.content}
+                        tags={forum.tags}
+                        user={forum.user}
+                        likesCount={forum.likesCounter}
+                        commentsCount={forum.commentsCounter}
+                        avatar = {forum.user.avatar}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )
           }
+
+
         </Col>
         <Col></Col>
       </Row>
