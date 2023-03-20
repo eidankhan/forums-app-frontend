@@ -96,7 +96,7 @@ export const ForumsList = () => {
               :
               (
 
-                forums === undefined ? <p> No Posts Available </p> :
+                forums === undefined ? <h3 className='mt-5'> No Posts Available </h3> :
                 <div>
                   {forums.map(forum => (
                     <div key={forum.id}>

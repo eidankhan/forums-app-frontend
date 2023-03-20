@@ -5,7 +5,7 @@ import { LoginForm } from './components/LoginForm';
 import { RegistrationForm } from './components/RegistrationForm';
 import { AddForum } from './components/AddForum';
 import { PostDetails } from './components/PostDetails';
-import { Profile } from './components/Profile';
+import UserProfile from './components/profile/UserProfile';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
       <div className='mt-5'>
         <Routes>
           <Route exact path='/' element={< ForumsList />}></Route>
-          <Route exact path='/profile' element={< Profile />}></Route>
+          <Route exact path='/profile' element={< UserProfile />}></Route>
           <Route exact path='/login' element={< LoginForm />}></Route>
           <Route exact path='/register' element={< RegistrationForm />}></Route>
           <Route exact path='/add-forum' element={< AddForum />}></Route>

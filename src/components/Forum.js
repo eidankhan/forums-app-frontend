@@ -8,6 +8,7 @@ import axios from 'axios';
 
 
 export const Forum = (props) => {
+    const BASE_URL = 'http://localhost:8089/files/readFile/';
     const navigate = useNavigate();
     let imageUrl = 'https://w7.pngwing.com/pngs/81/570/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo-thumbnail.png';
     const [currentUser, setCurrentUser] = useState('');
@@ -17,6 +18,7 @@ export const Forum = (props) => {
     const [isLoadCommentsButtonClicked, setIsLoadCommentsButtonClicked] = useState(false);
     const [value, setValue] = useState('');
     const [likeIconColor, setLikeIconColor] = useState('white');
+    const [profileUrl, setProfileUrl] = useState('');
 
     useEffect(() => {
         console.log('currentUser', currentUser);
@@ -24,7 +26,8 @@ export const Forum = (props) => {
         if (user !== undefined || user !== null) {
             setCurrentUser(user);
         }
-    }, [currentUser, likesCounter]);
+        props.avatar === null ? setProfileUrl(imageUrl) : setProfileUrl(`${BASE_URL}${props.avatar}`);
+    }, [currentUser, likesCounter, props.avatar]);
 
     const handleLikedButton = async () => {
         if (currentUser === null || currentUser === undefined) {
@@ -173,14 +176,14 @@ export const Forum = (props) => {
                     <Card.Title> {props.title} </Card.Title>
                     <Row className="align-items-center mt-3">
                         <Col md={4}>
-                            <Image src={imageUrl} roundedCircle style={{ width: '70px' }} />
+                            <Image src={profileUrl} roundedCircle style={{ width: '70px' }} />
                             <div className='d-inline-block'>
                                 <p> &nbsp; <strong>{props.user.name}</strong> </p>
                             </div>
                         </Col>
                         <Col md={2}></Col>
                         <Col md={6}>
-                            <div className="d-flex">
+                            <div className="d-flex justify-content-end">
                                 {
                                     props.tags &&
                                     props.tags.map(tag => (

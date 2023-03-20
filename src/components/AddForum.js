@@ -33,8 +33,8 @@ export const AddForum = () => {
             setCurrentUser(user);
     }, [location]);
 
-     // start the counter when response changes
-     useEffect(() => {
+    // start the counter when response changes
+    useEffect(() => {
         let intervalId;
         if (response && variant === 'success' && count > 0) {
             intervalId = setInterval(() => {
@@ -53,34 +53,45 @@ export const AddForum = () => {
 
 
     const savePost = async () => {
-        const username = currentUser;
-        const url = `http://localhost:8089/forums/create/${username}`;
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', content);
-        formData.append('file', file);
-
-        const options = {
-            method: 'POST',
-            body: formData,
-        };
-
-        try {
-            const response = await fetch(url, options);
-            const data = await response.json();
-            if(data.code === 200){
-                setResponse(data.message);
-                setVariant('success'); // set the alert variant to success
-                setCount(5); // reset the counter
-            }
-            else{
-                setResponse(data.message);
-            }
-            
-        } catch (error) {
-            setResponse(error.message);
-            console.error('Error --> ', error);
+        debugger;
+        if (title === '' || content === '') {
+            setVariant('danger');
+            setResponse('Title & Content are mandatory fields');
+            return;
         }
+        else {
+            const username = currentUser;
+            const url = `http://localhost:8089/forums/create/${username}`;
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('content', content);
+            formData.append('file', file);
+
+            const options = {
+                method: 'POST',
+                body: formData,
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                if (data.code === 200) {
+                    setResponse(data.message);
+                    setVariant('success'); // set the alert variant to success
+                    setCount(5); // reset the counter
+                }
+                else {
+                    setVariant('danger');
+                    setResponse(data.message);
+                }
+
+            } catch (error) {
+                setVariant('danger');
+                setResponse(error.message);
+                console.error('Error --> ', error);
+            }
+        }
+
     };
 
 
@@ -97,7 +108,7 @@ export const AddForum = () => {
                                 response &&
                                 <Alert variant={variant}>
                                     {
-                                        variant === 'danger' ? 'Error occurred while posting this forum' :
+                                        variant === 'danger' ? response :
                                             `New Post updated successfully! Redirecting to forums pags in ${count} seconds`
                                     }
                                 </Alert>

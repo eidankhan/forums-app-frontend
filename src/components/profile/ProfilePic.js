@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Image, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Container, Row, Col, Image, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 
-const ProfilePic = () => {
+const ProfilePic = (props) => {
     const location = useLocation();
     const [selectedFile, setSelectedFile] = useState(null);
-    let defaultImageUrl = 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80';
-    const [imagePreviewUrl, setImagePreviewUrl] = useState(defaultImageUrl);
-    const [currentUser, setCurrentUser] = useState(null);
+    const [imagePreviewUrl, setImagePreviewUrl] = useState(props.avatar);
 
-    const handleFileInputChange = (e) => {
+    useEffect(() => {
+        setImagePreviewUrl(props.avatar);
+    }, [props.avatar]);
+
+    const handleFileInputChange = async (e) => {
         e.preventDefault();
         let reader = new FileReader();
         let file = e.target.files[0];
@@ -18,38 +20,39 @@ const ProfilePic = () => {
             setImagePreviewUrl(reader.result);
         }
         reader.readAsDataURL(file);
-        if(currentUser && selectedFile)
-            changeProfilePicture();
-
     }
 
     useEffect(() => {
-        const user = localStorage.getItem('currentUser');
-        if (user !== null || user !== undefined)
-            setCurrentUser(user);
-    }, [location, selectedFile]);
+        console.log('Current User --> ' + props.currentUser);
+        console.log('Avatar URL:' + props.avatar);
+    }, [location, selectedFile, props.currentUser, props.avatar]);
 
     const changeProfilePicture = async () => {
         debugger;
-        const url = `http://localhost:8089/users/change-profile-photo`;
-        const formData = new FormData();
-        formData.append('username', currentUser);
-        formData.append('file', selectedFile);
-        const options = {
-            method: 'POST',
-            body: formData,
-        };
+        if (props.currentUser && selectedFile) {
+            const url = `http://localhost:8089/users/change-profile-photo`;
+            const formData = new FormData();
+            formData.append('username', props.currentUser);
+            formData.append('file', selectedFile);
+            const options = {
+                method: 'POST',
+                body: formData,
+            };
 
-        try {
-            const response = await fetch(url, options);
-            const data = await response.json();
-            if (data.code === 200)
-                alert(data.message);
-            else
-                alert(data.message);
-        } catch (error) {
-            alert(error.message);
-            console.error('Error --> ', error);
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                if (data.code === 200)
+                    alert(data.message);
+                else
+                    alert(data.message);
+            } catch (error) {
+                alert(error.message);
+                console.error('Error --> ', error);
+            }
+        }
+        else {
+            alert('Unable to update profile pic');
         }
     }
 
@@ -82,6 +85,16 @@ const ProfilePic = () => {
                             />
                         </label>
                     </OverlayTrigger>
+                </Col>
+            </Row>
+            <Row className="justify-content-md-center mt-5">
+                <Col md="auto">
+                    <Button
+                        variant='success'
+                        onClick={changeProfilePicture}
+                    >
+                        Update
+                    </Button>
                 </Col>
             </Row>
         </Container>

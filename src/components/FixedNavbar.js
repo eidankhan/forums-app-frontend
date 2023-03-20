@@ -50,27 +50,20 @@ export const FixedNavbar = () => {
               <LinkContainer to="/add-forum">
                 <Nav.Link>Add Forum</Nav.Link>
               </LinkContainer>
-              {/* <LinkContainer to="/profile">
+              <LinkContainer to="/profile">
                 <Nav.Link>Profile</Nav.Link>
-              </LinkContainer> */}
+              </LinkContainer>
               <Nav.Item>
                 <Nav.Link disabled> <strong className='text-success'> {currentUser} </strong> </Nav.Link>
               </Nav.Item>
-              {/* <Button
-                variant='secondary'
-                onClick={handleLogout}
-              >
-                Logout
-              </Button> */}
               <Nav.Item className='mt-2'>
-                {/* <Nav.Link disabled> */}
                   <FaSignOutAlt
                     size={24}
                     color='white'
                     onClick={handleLogout}
                     style={{ cursor: 'pointer' }}
                   />
-                {/* </Nav.Link> */}
+                  Logout
               </Nav.Item>
             </Nav>
           </Navbar.Collapse>
